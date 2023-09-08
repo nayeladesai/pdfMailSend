@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        /* body {
+        background-color: #0f172a;
+        ;
+    } */
+
+        page {
+            background: #0f172a;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+        }
+
+        .main-div {
+            width: 100%;
+            display: flex;
+        }
+
+        .main-div-left {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-div-right {
+            width: 80%;
+            /* background-color: #38465e; */
+            height: 100%;
+            margin: 5px 10px;
+
+        }
+
+
+
+        .op-list {
+            margin: 0;
+            padding: 0;
+        }
+
+        .op-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+            padding: 0.75rem;
+            border-radius: 5px;
+            background-color: #28364d;
+            border: 1px solid #28364d;
+        }
+
+
+        .operation-date {
+            display: flex;
+            list-style-type: none;
+            color: #fff;
+            padding: 0;
+        }
+
+        .operation-date li {
+            width: 30px;
+            text-align: center;
+            margin-right: 5px;
+            font-size: 12px;
+        }
+
+        .operation-report li {
+            height: 35px;
+            width: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            list-style-type: none;
+            background-color: rgb(69, 84, 110);
+            color: #fff;
+            margin-right: 5px;
+            font-size: 10px;
+
+        }
+
+        .operation-report {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+
+        }
+
+        .op-label {
+            font-size: 14px;
+            color: #fff;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        .op-score-success {
+            color: #41FC82;
+            font-size: 13px;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        .op-score-expire {
+            color: #F27575;
+            font-size: 13px;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        .op-score-warning {
+            color: #FCF541;
+            font-size: 13px;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        .single-report {
+            background-color: transparent !important;
+            margin-left: -32px !important;
+        }
+
+        .percentage-border-success {
+            height: 2px;
+            background-color: #41FC82;
+            margin-top: -5px;
+        }
+
+        .percentage-border-expired {
+            height: 2px;
+            background-color: #F27575;
+            margin-top: -5px;
+        }
+
+        .percentage-border-warning {
+            height: 2px;
+            background-color: #FCF541;
+            margin-top: -5px;
+        }
+
+        .op-date-divider {
+            margin: 0px -5px !important;
+        }
+
+        @media print {
+
+            body,
+            page {
+                background: #0f172a;
+                margin: 0;
+                box-shadow: 0;
+            }
+
+            .main-div {
+                width: 100%;
+                display: flex;
+            }
+
+            .main-div-left {
+                width: 15%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .main-div-right {
+                width: 85%;
+                /* background-color: #38465e; */
+                height: 100%;
+                margin: 5px 10px;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <page size="A4" layout="landscape"></page>
+    </p>
+    <div class="main-div">
+        <div class="main-div-left">
+
+            <ul class="op-list" id="dynamic-op-list">
+                <!-- Dynamic data will be inserted here -->
+                <li>
+                    <h5 class="op-label">
+                        <%= data.title %>
+                    </h5>
+                    <div class="op-score-success"></div>
+                </li>
+                <% data.ops.forEach((el)=>{ %>
+                    <li>
+                        <%= el.ops %>
+                            <h5 class="op-label">
+                                <%= el.title %>
+                            </h5>
+                            <div class="op-score-success">
+                                <!-- const opScore =  <%= el.score %> !== null &&  <%= el.score %> !== undefined ? `${ <%= el.score %>}%` : ''; -->
+                                <% if (el.score !==null && el.score !==undefined) { %>
+                                    <%= el.score %>%
+                                        <% } else { %>
+
+                                            <% } %>
+                            </div>
+                    </li>
+                    <% }) %>
+
+            </ul>
+        </div>
+        <div class="main-div-right">
+            <% const currentDate=new Date(); const currentYear=currentDate.getFullYear(); const
+                currentMonth=currentDate.getMonth(); const totalDaysInMonth=new Date(currentYear, currentMonth + 1,
+                0).getDate(); %>
+
+                <ul class="operation-date" id="dynamic-date-list">
+                    <% for (let dayNumber=1; dayNumber <=totalDaysInMonth; dayNumber++) { %>
+                        <li>
+                            <%= dayNumber %>
+                        </li>
+                        <% if (new Date(currentYear, currentMonth, dayNumber).getDay()===0 && dayNumber <
+                            totalDaysInMonth) { %>
+                            <li> | </li>
+                            <% } %>
+                                <% } %>
+                </ul>
+
+                </ul>
+                <div id="dynamic-operations">
+                    <!-- Dynamic operation report lists will be inserted here -->
+                    <% data.ops.forEach((op)=> { %>
+                        <ul class="operation-report">
+                            <% for (let dayNumber=1; dayNumber <=totalDaysInMonth; dayNumber++) { %>
+                                <li>
+                                    <%= op.days.find(day=> day.day === dayNumber)?.count || '' %>
+                                </li>
+                                <% if (new Date(currentYear, currentMonth, dayNumber).getDay()===0 && dayNumber <
+                                    totalDaysInMonth) { %>
+                                    <li class="single-report"></li>
+                                    <% } %>
+                                        <% } %>
+                        </ul>
+                        <% }) %>
+                </div>
+        </div>
+    </div>
+    </script>
+</body>
+
+</html>
